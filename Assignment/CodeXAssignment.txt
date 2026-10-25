@@ -1,0 +1,94 @@
+'CREATE DATABASE company_db;
+USE company_db;
+
+CREATE TABLE codexemployees(
+emp_id INT PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(50),
+age INT,
+city VARCHAR(50),
+salary INT
+);
+
+INSERT INTO codexemployees
+(name,age,city,salary)
+VALUES
+('Ritesh',22,'Mumbai',35000),
+('Amit',25,'Pune',45000),
+('Priya',23,'Mumbai',50000),
+('Neha',24,'Nashik',30000),
+('Rahul',26,'Pune',55000);
+
+
+ALTER TABLE codexemployees
+ADD COLUMN department VARCHAR(30);
+
+ALTER TABLE codexemployees
+ADD COLUMN email VARCHAR(30);
+
+ALTER TABLE codexemployees
+MODIFY COLUMN salary DECIMAL(10,2);
+
+ALTER TABLE codexemployees
+RENAME COLUMN city TO location;
+
+
+SELECT * FROM codexemployees 
+WHERE salary > 35000;
+
+SELECT * FROM codexemployees 
+WHERE age <= 24;
+
+SELECT * FROM codexemployees 
+WHERE salary != 50000;
+
+SELECT * FROM codexemployees 
+WHERE salary >= 45000;
+
+UPDATE codexemployees
+SET salary = 40000
+WHERE name='Ritesh';
+
+UPDATE Codexemployees
+SET department = 'IT'
+WHERE salary > 45000;
+
+UPDATE codexemployees
+SET location = 'Mumbai'
+WHERE name = 'Amit';
+
+DELETE FROM codexemployees
+WHERE name = 'Neha';
+
+START TRANSACTION;
+
+UPDATE codexemployees
+SET salary = 60000
+WHERE name = 'Amit';
+
+SAVEPOINT sp1;
+
+UPDATE codexemployees
+SET salary = 25000
+WHERE name = 'Priya';
+
+SAVEPOINT sp1;
+
+COMMIT;
+
+START TRANSACTION;
+
+UPDATE codexemployees
+SET salary = 10000
+WHERE name = 'Rahul';
+
+
+CREATE TABLE codexemployees_backup
+LIKE codexemployees;
+
+INSERT INTO codexemployees_backup 
+SELECT * FROM codexemployees;
+
+
+TRUNCATE codexemployees_backup;
+
+DROP TABLE codexemployees_backup;

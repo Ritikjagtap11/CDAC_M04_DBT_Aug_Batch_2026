@@ -1,0 +1,136 @@
+create table emp_demo(
+	emp_id int primary key,
+	emp_name varchar(50),
+	dept_name varchar(30),
+	salary int
+);
+
+create table emp_demo(
+	emp_id int primary key,
+	emp_name varchar(50),
+	dept_name varchar(30),
+	salary int
+);
+
+
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.46 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use cdacaug26;
+Database changed
+mysql> create table emp_demo(
+    ->  emp_id int primary key,
+    ->  emp_name varchar(50),
+    ->  dept_name varchar(30),
+    ->  salary int
+    -> );
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> desc emp_demo;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| emp_id    | int         | NO   | PRI | NULL    |       |
+| emp_name  | varchar(50) | YES  |     | NULL    |       |
+| dept_name | varchar(30) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.04 sec)
+
+mysql> show index from emp_demo;
++----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table    | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp_demo |          0 | PRIMARY  |            1 | emp_id      | A         |           0 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
++----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+1 row in set (0.02 sec)
+
+
+mysql> create table employee_demo (
+    -> emp_id int primary key,
+    -> emp_name varchar(50),
+    -> salary decimal(10,2),
+    -> dept_id int);
+Query OK, 0 rows affected (0.05 sec)
+
+delimiter //
+create procedure insert_into_employee()
+begin
+
+declare i int default 1;
+while i <= 100000 do
+insert into employee_demo
+values (
+i,
+concat('employee_',i),
+30000+(i mod 70000),
+(i mod 10) +1
+);
+set i=i+1;
+end while;
+end//
+
+delimiter ;
+call insert_into_employee();
+
+select * from employee_demo where emp_name = 'employee_99587';
+
+explain 
+select * from employee_demo where emp_name = 'employee_99587';
+
+explain analyze
+select * from employee_demo where emp_name = 'employee_99587';
+
+
+EXPLAIN
+-> Filter: (employee_demo.emp_name = 'employee_99587')  (cost=10105 rows=10025) (actual time=46.8..47.1 rows=1 loops=1)
+ -> Table scan on employee_demo  (cost=10105 rows=100249) (actual time=0.296..34.6 rows=100000 loops=1)
+
+create index idx_emp_name
+on employee_demo(emp_name);
+ 
+
+create table student (
+ student_id int primary key,
+ name varchar(30) not null,
+ dept_id int ,
+ marks decimal (5,2),
+ 
+ constraint fk_student_department
+ foreign key (dept_id)
+ references department (dept_id));
+
+
+delimiter //
+create procedure calculate_total()
+begin
+declare total int default 0;
+set total = 100 + 200;
+select total as total_value;
+end //
+
+delimiter ;
+
+call calculate_total;
+
+retrive values using select ...into
+
+delimiter $$
+create procedure get_student_marks(In s_id int)
+begin
+declare v_marks decimal(5,2);
+select marks
+into v_marks
+from student where student_id = s_id;
+
+select v_marks as marks

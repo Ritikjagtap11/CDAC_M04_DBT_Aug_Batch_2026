@@ -1,0 +1,202 @@
+Q1->
+CREATE DATABASE IF NOT EXISTS assingment_2;
+USE assingment_2;
+
+CREATE TABLE department
+(
+	dep_id INT PRIMARY KEY AUTO_INCREMENT,
+	dep_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE employee
+(
+	emp_id INT PRIMARY KEY AUTO_INCREMENT,
+	emp_name VARCHAR(50) NOT NULL,
+	emp_salary DECIMAL,
+	dep_id INT,
+
+	FOREIGN KEY (dep_id)
+	REFERENCES department(dep_id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+);
+
+Q2->
+ALTER TABLE employee
+ADD COLUMN emp_age INT CHECK(emp_age > 18);
+
+
+Q3->
+INSERT INTO department
+(dep_name)
+VALUES
+("IT"),
+("Finance"),
+("Mechanical");
+
+INSERT INTO employee
+(emp_name,emp_salary,dep_id,emp_age)
+VALUES
+("Ritik",45000,1,23),
+("Sachin",35000,3,24),
+("Vivek",76000,2,26),
+("Sham",65000,1,35);
+
+
+Q4->
+TRUNCATE TABLE employee;
+
+Q5->
+UPDATE employee
+SET emp_salary = 85000
+WHERE emp_id = 1;
+
+Q6->
+CREATE USER 'mahesh'@'localhost'
+IDENTIFIED BY 'Mahesh@123';
+
+GRANT SELECT
+ON cdacaug26.employee
+TO 'mahesh'@'localhost';
+
+SHOW GRANTS FOR 'mahesh'@'localhost';
+
+Q7->
+CREATE USER 'sachin'@'localhost'
+IDENTIFIED BY 'sachin@123';
+
+GRANT INSERT
+ON cdacaug26.employee
+TO 'sachin'@'localhost';
+
+SHOW GRANTS FOR 'sachin'@'localhost';
+
+REVOKE INSERT
+ON cdacaug26.employee
+FROM 'sachin'@'localhost';
+
+Q8->
+START TRANSACTION;
+
+INSERT INTO employee
+(emp_name,emp_salary,dep_id,emp_age)
+VALUES
+("Mahesh",55000,1,26);
+
+COMMIT;
+
+Q9->
+UPDATE employee
+SET emp_salary = 70000
+WHERE emp_id = 5;
+
+COMMIT;
+
+Q10->
+
+SAVEPOINT d1;
+
+UPDATE employee
+SET dep_id = 3
+WHERE emp_id = 5;
+
+--After updating this
+ALTER TABLE employee
+ADD CONSTRAINT fk_emp_id
+FOREIGN KEY (dep_id)
+REFERENCES department(dep_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+Q11->
+
+SELECT * FROM employee;
+
+ROLLBACK TO SAVEPOINT d1;
+
+SELECT * FROM employee;
+
+Q12->
+TRUNCATE employee;
+
+Q13->
+SELECT * 
+FROM employee
+WHERE emp_salary > 50000;
+
+Q14->
+UPDATE employee
+SET emp_salary = emp_salary + (emp_salary *  10 / 100);
+
+Q15->
+SELECT dep_id,COUNT(*)
+FROM employee
+GROUP BY dep_id;
+
+Q16->
+SELECT *
+FROM department
+WHERE dep_id NOT IN (
+    SELECT dep_id
+    FROM employee
+    WHERE dep_id IS NOT NULL
+);
+
+CREATE TABLE salespeople (
+    salesperson_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    city VARCHAR(50)
+);
+
+INSERT INTO salespeople VALUES
+(1, 'Rahul', 'Mumbai'),
+(2, 'Amit', 'Pune'),
+(3, 'Priya', 'Mumbai'),
+(4, 'Sneha', 'Dhule');
+
+
+
+CREATE VIEW mumbai_salespeople AS
+SELECT *
+FROM salespeople
+WHERE city = 'Mumbai';
+
+SELECT * FROM mumbai_salespeople;
+
+Q17->
+
+SELECT emp_name, emp_salary
+FROM employee
+WHERE emp_salary = (
+    SELECT MAX(emp_salary)
+    FROM employee
+);
+
+ SELECT MAX(emp_salary)
+ FROM employee;
+
+Q18->
+
+SELECT *
+FROM employee
+ORDER BY emp_salary DESC;
+
+SELECT *
+FROM employee
+ORDER BY emp_salary DESC
+LIMIT 1 OFFSET 1;
+
+Q19->
+
+SELECT * 
+FROM employee
+ORDER BY joining_date DESC;
+
+Q20->
+
+ALTER TABLE department
+RENAME COLUMN dep_name TO DepartmentName;
+
+ALTER TABLE department
+CHANGE COLUMN dep_name DepartmentName
+VARCHAR(50) NOT NULL;

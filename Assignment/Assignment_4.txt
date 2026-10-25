@@ -1,0 +1,158 @@
+CREATE DATABASE employee_assignment;
+USE employee_assignment;
+
+CREATE TABLE Department (
+    dep_id INT PRIMARY KEY,
+    dep_name VARCHAR(50) NOT NULL,
+    dep_location VARCHAR(50)
+);
+
+CREATE TABLE Employee (
+    emp_id INT PRIMARY KEY AUTO_INCREMENT,
+    emp_name VARCHAR(50) NOT NULL,
+    emp_salary DECIMAL(10,2),
+    emp_age INT,
+    joining_date DATE,
+    dep_id INT,
+    FOREIGN KEY (dep_id) REFERENCES Department(dep_id)
+);
+
+CREATE TABLE Project (
+    project_id INT PRIMARY KEY,
+    project_name VARCHAR(100) NOT NULL,
+    project_budget DECIMAL(12,2),
+    start_date DATE,
+    dep_id INT,
+    FOREIGN KEY (dep_id) REFERENCES Department(dep_id)
+);
+
+INSERT INTO Department VALUES
+(1, 'IT', 'Pune'),
+(2, 'HR', 'Mumbai'),
+(3, 'Finance', 'Nashik'),
+(4, 'Marketing', 'Pune'),
+(5, 'Sales', 'Mumbai');
+
+INSERT INTO Employee
+(emp_name, emp_salary, emp_age, joining_date, dep_id)
+VALUES
+('Ritik', 49500, 23, '2025-06-10', 1),
+('Sachin', 38500, 24, '2025-07-15', 2),
+('Vivek', 83600, 26, '2025-08-01', 3),
+('Priya', 55000, 24, '2025-09-15', 4),
+('Rahul', 62000, 27, '2025-10-01', 5);
+
+INSERT INTO Project VALUES
+(101, 'Website Development', 250000, '2025-06-01', 1),
+(102, 'Recruitment System', 150000, '2025-07-01', 2),
+(103, 'Banking Application', 500000, '2025-08-01', 3),
+(104, 'Digital Marketing', 200000, '2025-09-01', 4),
+(105, 'Sales Management', 300000, '2025-10-01', 5);
+
+SELECT * FROM Department;
+
+SELECT * FROM Employee;
+
+SELECT * FROM Project;
+
+
+Q1->
+SELECT d.dep_name,e.emp_name
+FROM employee e
+CROSS JOIN department d;
+
+Q2->
+SELECT d.dep_id,d.dep_name,d.dep_location,
+       e.emp_id,e.emp_name,e.emp_salary,e.emp_age,e.joining_date
+FROM employee e
+INNER JOIN department d
+ON e.dep_id = d.dep_id;
+
+Q3->
+SELECT d.dep_id,d.dep_name,d.dep_location,
+       e.emp_id,e.emp_name,e.emp_salary,e.emp_age,e.joining_date
+FROM employee e
+LEFT JOIN department d
+ON e.dep_id = d.dep_id;
+
+Q4->
+SELECT d.dep_id,d.dep_name,d.dep_location,
+       e.emp_id,e.emp_name,e.emp_salary,e.emp_age,e.joining_date
+FROM employee e
+LEFT JOIN department d
+ON e.dep_id = d.dep_id;
+
+Q5->
+SELECT d.dep_id,d.dep_name,d.dep_location,
+       e.emp_id,e.emp_name,e.emp_salary,e.emp_age,e.joining_date
+FROM employee e
+NATURAL JOIN department d;
+
+Q6->
+SELECT p.project_id, p.project_name, p.project_budget, p.start_date,
+       e.emp_id, e.emp_name, e.emp_salary, e.emp_age, e.joining_date
+FROM employee e
+CROSS JOIN project p;
+
+Q7->
+CREATE TABLE employee_backup
+LIKE employee;
+
+Q8->
+INSERT INTO employee_backup
+SELECT * FROM employee;
+
+Q9->
+CREATE TABLE ProjectArchive
+LIKE project;
+
+INSERT INTO ProjectArchive
+SELECT * FROM project;
+
+Q10->
+ALTER TABLE employee
+MODIFY COLUMN emp_id INT AUTO_INCREMENT;
+
+Q11->
+SELECT *
+FROM employee
+WHERE emp_salary > (
+      SELECT AVG(emp_salary) 
+      FROM employee
+);
+
+
+Q12->
+SELECT *
+FROM employee e, department d
+WHERE e.dep_id = d.dep_id
+AND d.dep_location IN (
+    SELECT dep_location 
+    FROM department 
+    WHERE dep_location = "Mumbai"
+);
+
+Q13->
+SELECT *
+FROM department d
+WHERE 5 > (
+      SELECT COUNT(emp_id) 
+      FROM employee e 
+      WHERE d.dep_id = e.dep_id
+);
+
+Q14->
+SELECT MAX(emp_salary) AS Maximum_Salary
+FROM employee;
+
+Q15->
+SELECT e.emp_name AS employee_Name,
+       d.emp_name AS mentor_Name
+FROM employee e
+LEFT JOIN employee d
+ON e.emp_id = d.dep_id;
+
+
+
+
+

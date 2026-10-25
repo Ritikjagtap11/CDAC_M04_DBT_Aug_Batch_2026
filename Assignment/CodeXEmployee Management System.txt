@@ -1,0 +1,121 @@
+# MySQL Assignment: Employee Management System
+
+**Question:**
+
+Create a database named `company_db` to manage employee information. Perform all the following operations in the given order.
+
+### 1. CREATE DATABASE AND TABLE
+
+* Create a database named `company_db`.
+* Select the database using `USE`.
+* Create a table named `employee` with the following columns:
+
+  * `Emp_ID` — INT
+  * `Name` — VARCHAR(50)
+  * `Age` — INT
+  * `City` — VARCHAR(30)
+  * `Salary` — INT
+* Set `Emp_ID` as the **PRIMARY KEY** and enable **AUTO_INCREMENT** so that employee IDs are generated automatically.
+
+### 2. INSERT
+
+Insert the following five employees into the table. Let MySQL generate their IDs automatically.
+
+| Name   | Age | City   | Salary |
+| ------ | --: | ------ | -----: |
+| Ritesh |  22 | Mumbai |  35000 |
+| Amit   |  25 | Pune   |  45000 |
+| Priya  |  23 | Mumbai |  50000 |
+| Neha   |  24 | Nashik |  30000 |
+| Rahul  |  26 | Pune   |  55000 |
+
+Display all records.
+
+### 3. ALTER AND ADD
+
+* Add a new column named `Department` with the data type `VARCHAR(30)`.
+* Add another column named `Email` with the data type `VARCHAR(100)`.
+
+### 4. MODIFY
+
+Change the data type of `Salary` from `INT` to `DECIMAL(10,2)`.
+
+### 5. RENAME
+
+* Rename the column `City` to `Location`.
+* Rename the table `employee` to `employees`.
+
+### 6. COMPARISON OPERATORS
+
+Write queries to display:
+
+* Employees whose salary is greater than ₹35,000.
+* Employees whose age is less than or equal to 24.
+* Employees whose salary is not equal to ₹50,000.
+* Employees whose salary is greater than or equal to ₹45,000.
+
+### 7. LOGICAL OPERATORS
+
+Write queries to display:
+
+* Employees who live in Mumbai **AND** earn more than ₹30,000.
+* Employees who live in Pune **OR** earn more than ₹50,000.
+* Employees who do **NOT** live in Mumbai.
+
+### 8. UPDATE
+
+* Update Ritesh's salary to ₹40,000.
+* Set the department to `'IT'` for employees whose salary is greater than ₹45,000.
+* Update Amit's location from Pune to Mumbai.
+
+### 9. DELETE
+
+Delete the employee record whose `Name` is `'Neha'`.
+
+Display all remaining records.
+
+### 10. SAVEPOINT AND ROLLBACK TO SAVEPOINT
+
+* Start a transaction.
+* Update Amit's salary to ₹60,000.
+* Create a savepoint named `sp1`.
+* Update Priya's salary to ₹25,000.
+* Roll back to the savepoint `sp1`.
+* Display all records and verify which changes remain.
+
+### 11. COMMIT
+
+Commit the transaction so that Amit's salary update is saved.
+
+### 12. FULL ROLLBACK
+
+* Start a new transaction.
+* Update Rahul's salary to ₹10,000.
+* Roll back the transaction completely.
+* Verify that Rahul's original salary is restored.
+
+### 13. CREATE A BACKUP TABLE
+
+Create a table named `employees_backup` containing the structure and current records of `employees`.
+
+Display the backup table's records.
+
+### 14. TRUNCATE
+
+Truncate the `employees_backup` table.
+
+Verify that all its records have been removed while the table structure remains.
+
+### 15. DROP
+
+Drop the `employees_backup` table completely.
+
+Verify that it no longer exists.
+
+### 16. FINAL VERIFICATION
+
+* Display the structure of `employees`.
+* Display all remaining employee records.
+* Verify that `Emp_ID` is the primary key and uses `AUTO_INCREMENT`.
+
+**Important:** Use an InnoDB table for transaction operations. Perform the transaction questions before truncating or dropping the backup table. Do not truncate or drop the original `employees` table.

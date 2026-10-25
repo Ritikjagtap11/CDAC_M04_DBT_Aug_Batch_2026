@@ -1,0 +1,126 @@
+Q1->
+SELECT SUM(emp_salary) as total_salary
+FROM employee;
+
+Q2->
+SELECT d.dep_name, AVG(e.emp_salary) as avg_salary
+FROM employee e,department d
+WHERE e.dep_id = d.dep_id
+GROUP BY d.dep_name;
+
+Q3->
+SELECT d.dep_name, COUNT(e.emp_name) emp_count
+FROM employee e, department d
+WHERE e.dep_id = d.dep_id
+GROUP BY d.dep_name;
+
+Q4->
+SELECT d.dep_name, COUNT(e.emp_name) emp_count
+FROM employee e, department d
+WHERE e.dep_id = d.dep_id
+GROUP BY d.dep_name
+HAVING emp_count > 5;
+
+Q5->
+SELECT DISTINCT dep_location
+FROM department;
+
+Q6->
+SELECT MAX(emp_salary) AS highest_salary
+FROM employee;
+
+SELECT COUNT(emp_name) AS total_employee
+FROM employee;
+
+Q7->
+SELECT * 
+FROM employee
+WHERE emp_name LIKE "A%";
+
+Q8->
+SELECT * 
+FROM employee
+WHERE emp_name LIKE "%n";
+
+Q9->
+SELECT * 
+FROM employee
+WHERE emp_name LIKE "%ra%";
+
+
+Q10->
+SELECT * 
+FROM employee
+ORDER BY emp_salary DESC;
+
+Q11->
+SELECT * 
+FROM employee
+ORDER BY dep_id ASC,emp_salary DESC;
+
+
+Q12->
+SELECT * 
+FROM employee
+WHERE emp_salary BETWEEN 30000 AND 60000;
+
+Q13->
+SELECT * 
+FROM employee
+WHERE dep_id IN(7,6,5);
+
+Q14->
+SELECT emp_name,emp_salary
+FROM employee
+WHERE emp_salary = (
+	SELECT MIN(emp_salary) 
+	AS Min_Salary
+	FROM employee
+);
+
+SELECT MIN(emp_salary) 
+  	AS Min_Salary
+FROM employee;
+
+
+Q15->
+SELECT *
+FROM employee
+WHERE joining_date BETWEEN '2025-01-01' AND '2026-12-31';
+
+
+Q16->
+SELECT *
+FROM employee
+WHERE emp_salary IS NULL;
+
+Q17->
+SELECT *
+FROM employee
+WHERE emp_salary IS NOT NULL;
+
+Q18->
+SELECT dep_id, SUM(emp_salary) AS total_salary
+FROM employee 
+GROUP BY dep_id
+HAVING total_salary > 100000;
+
+Q19->
+SELECT DISTINCT emp_name
+FROM employee;
+
+
+Q20->
+SELECT dep_location,COUNT(dep_location)
+FROM department
+GROUP BY dep_location;
+
+
+
+
+
+
+
+
+
+

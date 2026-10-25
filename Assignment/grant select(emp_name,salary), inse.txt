@@ -1,0 +1,30 @@
+grant select(emp_name,salary), insert(emp_id,salary)
+on cdacaug26.employee
+to 'thirduser'@'localhost';
+
+//VIEW
+
+create view select_employee_view as
+select emp_id,emp_name,emp_salary,dept_id
+from employee1;
+
+select * from select_employee_view;
+
+
+//FILTERD
+
+1.simple filtered
+create view sales_employee as
+select emp_id,emp_name,emp_salary,dept_id
+from employee1
+where dept_id = 5;
+
+select * from sales_employee;
+
+2.complex filtered
+create view sales_employee_with_dept_name as
+select e.emp_id,e.emp_name,e.emp_salary,d.dept_name
+from employee1 e, department d
+where e.dept_id = d.dept_id AND e.dept_id = 5;
+
+select * from sales_employee_with_dept_name;

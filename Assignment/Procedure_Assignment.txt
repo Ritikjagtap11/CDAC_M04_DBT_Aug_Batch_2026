@@ -1,0 +1,706 @@
+Q1-> check even and odd
+
+DELIMITER //
+CREATE PROCEDURE check_even_odd(IN num INT)
+BEGIN
+
+	IF MOD(num,2)=0 THEN
+	SELECT 'Even' AS display;
+	ELSE
+	SELECT 'Odd' AS display;
+	END IF;
+END //
+DELIMITER ;
+--------------------------------------------
+outup->
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE check_even_odd(IN num INT)
+    -> BEGIN
+    ->
+    ->  IF MOD(num,2)=0 THEN
+    ->  SELECT 'Even' AS display;
+    ->  ELSE
+    ->  SELECT 'Odd' AS display;
+    ->  END IF;
+    -> END //
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> DELIMITER ;
+mysql> CALL check_even_odd(25);
++---------+
+| display |
++---------+
+| Odd     |
++---------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL check_even_odd(40);
++---------+
+| display |
++---------+
+| Even    |
++---------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Q2->Calculate Simple Interest
+
+DELIMITER //
+CREATE PROCEDURE calculate_interest(
+	IN principal INT,
+	IN rate INT,
+	IN time INT)
+BEGIN
+  	DECLARE result DECIMAL(10,2);
+	SET result = (principal * rate * time) / 100;
+	SELECT result AS simple_Interest;
+
+END //
+DELIMITER ;
+-------------------------------------------
+output->
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE calculate_interest(
+    ->  IN principal INT,
+    ->  IN rate INT,
+    ->  IN time INT)
+    -> BEGIN
+    ->          DECLARE result DECIMAL(10,2);
+    ->  SET result = (principal * rate * time) / 100;
+    ->  SELECT result AS simple_Interest;
+    ->
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql> CALL calculate_interest(10000, 5, 2);
++-----------------+
+| simple_Interest |
++-----------------+
+|         1000.00 |
++-----------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CALL calculate_interest(25000, 7, 3);
++-----------------+
+| simple_Interest |
++-----------------+
+|         5250.00 |
++-----------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Q3-> Calculate Grade
+
+DELIMITER //
+CREATE PROCEDURE Calculate_Grade
+(
+	IN student_ID INT, 
+	IN student_name VARCHAR(30), 
+	IN marks INT
+)
+BEGIN
+	DECLARE grade VARCHAR(10);
+	
+	IF marks IS NULL THEN
+	SELECT 'Invalid Marks' AS Message;
+
+	ELSEIF marks >= 90 AND marks <= 100 THEN
+	SET grade = 'A+';
+
+	ELSEIF marks >= 80 AND marks <= 89 THEN
+	SET grade = 'A';
+	
+	ELSEIF marks >= 70 AND marks <= 79 THEN
+	SET grade = 'B';
+
+	ELSEIF marks >= 60 AND marks <= 69 THEN
+	SET grade = 'C';
+	
+	ELSEIF marks >= 50 AND marks <= 59 THEN
+	SET grade = 'D';
+
+	ELSEIF marks >= 0 AND marks < 50 THEN
+        SET grade = 'F';
+
+	ELSE 
+	SELECT 'Invalid Marks' AS Message;
+	END IF;
+	
+	IF marks IS NOT NULL THEN
+	SELECT 
+		student_ID AS Id,
+		student_name AS Name,
+		marks AS Marks,
+		grade AS Grade;
+		
+	END IF;
+END //
+DELIMITER ;
+----------------------------------
+output->
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE Calculate_Grade
+    -> (
+    ->  IN student_ID INT,
+    ->  IN student_name VARCHAR(30),
+    ->  IN marks INT
+    -> )
+    -> BEGIN
+    ->  DECLARE grade VARCHAR(10);
+    ->
+    ->  IF marks IS NULL THEN
+    ->  SELECT 'Invalid Marks' AS Message;
+    ->
+    ->  ELSEIF marks >= 90 AND marks <= 100 THEN
+    ->  SET grade = 'A+';
+    ->
+    ->  ELSEIF marks >= 80 AND marks <= 89 THEN
+    ->  SET grade = 'A';
+    ->
+    ->  ELSEIF marks >= 70 AND marks <= 79 THEN
+    ->  SET grade = 'B';
+    ->
+    ->  ELSEIF marks >= 60 AND marks <= 69 THEN
+    ->  SET grade = 'C';
+    ->
+    ->  ELSEIF marks >= 50 AND marks <= 59 THEN
+    ->  SET grade = 'D';
+    ->
+    ->  ELSEIF marks >= 0 AND marks < 50 THEN
+    ->         SET grade = 'F';
+    ->
+    ->  ELSE
+    ->  SELECT 'Invalid Marks' AS Message;
+    ->  END IF;
+    ->
+    ->  IF marks IS NOT NULL THEN
+    ->  SELECT
+    ->          student_ID AS Id,
+    ->          student_name AS Name,
+    ->          marks AS Marks,
+    ->          grade AS Grade;
+    ->
+    ->  END IF;
+    -> END //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DELIMITER ;
+mysql> CALL calculate_grade(101, 'Amit', 85);
++------+------+-------+-------+
+| Id   | Name | Marks | Grade |
++------+------+-------+-------+
+|  101 | Amit |    85 | A     |
++------+------+-------+-------+
+1 row in set (0.03 sec)
+
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> CALL calculate_grade(102, 'Priya', 72);
++------+-------+-------+-------+
+| Id   | Name  | Marks | Grade |
++------+-------+-------+-------+
+|  102 | Priya |    72 | B     |
++------+-------+-------+-------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL calculate_grade(103, 'Rahul', 45);
++------+-------+-------+-------+
+| Id   | Name  | Marks | Grade |
++------+-------+-------+-------+
+|  103 | Rahul |    45 | F     |
++------+-------+-------+-------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Q4. Calculate Employee Bonus
+
+DELIMITER //
+CREATE PROCEDURE calculate_bonus
+(
+	IN emp_name VARCHAR(30),
+	IN salary DECIMAL(10,2)
+)	
+BEGIN 
+	DECLARE bouns_salary DECIMAL(10,2);
+	DECLARE total_salary DECIMAL(10,2);
+	DECLARE bonus_percentage INT DEFAULT 0;
+	
+	IF(salary <= 0) THEN
+	SELECT "Salary must be greather than 0" AS Message;
+		
+	ELSEIF (salary >= 100000) THEN
+	SET bonus_percentage = 20;
+	SET bouns_salary = salary * (20 / 100);
+	
+	ELSEIF (salary >= 50000) THEN
+	SET bonus_percentage = 15;
+	SET bouns_salary = salary * (15 / 100);
+	
+	ELSEIF (salary >= 30000) THEN
+	SET bonus_percentage = 10;
+	SET bouns_salary = salary * (10 / 100);
+
+	ELSEIF (salary <= 300000) THEN
+	SET bonus_percentage = 5;
+	SET bouns_salary = salary * (5 / 100);
+	
+	ELSE
+	SELECT "Invalid salary" AS Message;
+	END IF;
+	
+	
+	IF salary IS NOT NULL THEN
+	SET total_salary = salary + bouns_salary;
+	SELECT
+		emp_name AS Employee_Name,
+		salary AS Salary,
+		CONCAT(bonus_percentage,'%') AS Bonus_Percentage,
+		bouns_salary AS Bonus_Amount,
+		total_salary AS Total_Salary;
+	END IF;
+END //
+
+DELIMITER ;
+
+---------------------------------------------
+output->
+
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE calculate_bonus
+    -> (
+    ->  IN emp_name VARCHAR(30),
+    ->  IN salary DECIMAL(10,2)
+    -> )
+    -> BEGIN
+    ->  DECLARE bouns_salary DECIMAL(10,2);
+    ->  DECLARE total_salary DECIMAL(10,2);
+    ->  DECLARE bonus_percentage INT DEFAULT 0;
+    ->
+    ->  IF(salary <= 0) THEN
+    ->  SELECT "Salary must be greather than 0" AS Message;
+    ->
+    ->  ELSEIF (salary >= 100000) THEN
+    ->  SET bonus_percentage = 20;
+    ->  SET bouns_salary = salary * (20 / 100);
+    ->
+    ->  ELSEIF (salary >= 50000) THEN
+    ->  SET bonus_percentage = 15;
+    ->  SET bouns_salary = salary * (15 / 100);
+    ->
+    ->  ELSEIF (salary >= 30000) THEN
+    ->  SET bonus_percentage = 10;
+    ->  SET bouns_salary = salary * (10 / 100);
+    ->
+    ->  ELSEIF (salary <= 300000) THEN
+    ->  SET bonus_percentage = 5;
+    ->  SET bouns_salary = salary * (5 / 100);
+    ->
+    ->  ELSE
+    ->  SELECT "Invalid salary" AS Message;
+    ->  END IF;
+    ->
+    ->
+    ->  IF salary IS NOT NULL THEN
+    ->  SET total_salary = salary + bouns_salary;
+    ->  SELECT
+    ->          emp_name AS Employee_Name,
+    ->          salary AS Salary,
+    ->          CONCAT(bonus_percentage,'%') AS Bonus_Percentage,
+    ->          bouns_salary AS Bonus_Amount,
+    ->          total_salary AS Total_Salary;
+    ->  END IF;
+    -> END //
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> CALL calculate_bonus('Amit', 120000);
++---------------+-----------+------------------+--------------+--------------+
+| Employee_Name | Salary    | Bonus_Percentage | Bonus_Amount | Total_Salary |
++---------------+-----------+------------------+--------------+--------------+
+| Amit          | 120000.00 | 20%              |     24000.00 |    144000.00 |
++---------------+-----------+------------------+--------------+--------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL calculate_bonus('Priya', 65000);
++---------------+----------+------------------+--------------+--------------+
+| Employee_Name | Salary   | Bonus_Percentage | Bonus_Amount | Total_Salary |
++---------------+----------+------------------+--------------+--------------+
+| Priya         | 65000.00 | 15%              |      9750.00 |     74750.00 |
++---------------+----------+------------------+--------------+--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL calculate_bonus('Rahul', 25000);
++---------------+----------+------------------+--------------+--------------+
+| Employee_Name | Salary   | Bonus_Percentage | Bonus_Amount | Total_Salary |
++---------------+----------+------------------+--------------+--------------+
+| Rahul         | 25000.00 | 5%               |      1250.00 |     26250.00 |
++---------------+----------+------------------+--------------+--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Q5. Find Maximum of Three Numbers
+
+DELIMITER //
+CREATE PROCEDURE find_maximum (
+		 IN num1 INT,
+		 IN num2 INT,
+		 IN num3 INT)
+BEGIN
+	DECLARE largest_number INT DEFAULT 0;
+
+	IF ((num1 >= num2) && (num1 >= num3) THEN
+	SET largest_number = num1;
+
+	ELSEIF (num2 >= num1) && (num2 >= num3) THEN
+	SET largest_number = num2;
+	
+	ELSE
+	SET largest_number = num3;
+
+	END IF;
+	
+	SELECT largest_number AS Largest_Number;
+END //
+
+DELIMITER ;
+
+
+
+-------------------------------------
+output->
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE find_maximum (
+    ->           IN num1 INT,
+    ->           IN num2 INT,
+    ->           IN num3 INT)
+    -> BEGIN
+    ->  DECLARE largest_number INT DEFAULT 0;
+    ->
+    ->  IF (num1 > num2) && (num1 > num3) THEN
+    ->  SET largest_number = num1;
+    ->
+    ->  ELSEIF (num2 > num1) && (num2 > num3) THEN
+    ->  SET largest_number = num2;
+    ->
+    ->  ELSE
+    ->  SET largest_number = num3;
+    ->
+    ->  END IF;
+    ->
+    ->  SELECT largest_number AS Largest_Number;
+    -> END //
+Query OK, 0 rows affected, 2 warnings (0.02 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> CALL find_maximum(25, 78, 45);
++----------------+
+| Largest_Number |
++----------------+
+|             78 |
++----------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL find_maximum(100, 50, 75);
++----------------+
+| Largest_Number |
++----------------+
+|            100 |
++----------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CALL find_maximum(30, 30, 20);
++----------------+
+| Largest_Number |
++----------------+
+|             20 |
++----------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Q6. Employee Salary Analysis
+
+DELIMITER //
+CREATE PROCEDURE salary_analysis(
+	IN emp_name VARCHAR(20),
+	IN salary DECIMAL(10,2))
+BEGIN
+	DECLARE category VARCHAR(20) DEFAULT NULL;
+	DECLARE allowance_percentage INT DEFAULT 0;
+	DECLARE allowance_amount DECIMAL(10,2) DEFAULT 0;
+	DECLARE final_salary DECIMAL(10,2) DEFAULT 0;
+	
+	IF (salary <= 0) THEN
+	SELECT 'Invalid Salary' AS Message;
+	
+	ELSEIF (salary >= 100000) THEN
+	SET category = 'High';
+	SET allowance_percentage = 20;
+	SET allowance_amount = salary * (allowance_percentage /100);
+	
+	ELSEIF (salary >= 50000) THEN
+	SET category = 'Medium';
+	SET allowance_percentage = 15;
+	SET allowance_amount = salary * (allowance_percentage /100);
+
+	ELSEIF (salary <= 50000) THEN
+	SET category = 'Low';
+	SET allowance_percentage = 10;
+	SET allowance_amount = salary * (allowance_percentage /100);
+
+	ELSE
+	SELECT 'Invalid Salary' AS Message;
+	
+	END IF;
+	
+	IF salary IS NOT NULL THEN
+	SET final_salary = salary + allowance_amount;
+	
+	SELECT 
+		emp_name AS Employee_Name, 
+		salary AS Salary, 
+		category AS Category,
+		CONCAT(allowance_percentage,'%') AS Allowance_Percentage, 
+		allowance_amount AS Allowance_Amount,
+		final_salary AS Final_Salary;
+	END IF;
+END //
+
+DELIMITER ;
+---------------------------------------------------------
+output->
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE salary_analysis(
+    ->  IN emp_name VARCHAR(20),
+    ->  IN salary DECIMAL(10,2))
+    -> BEGIN
+    ->  DECLARE category VARCHAR(20) DEFAULT NULL;
+    ->  DECLARE allowance_percentage INT DEFAULT 0;
+    ->  DECLARE allowance_amount DECIMAL(10,2) DEFAULT 0;
+    ->  DECLARE final_salary DECIMAL(10,2) DEFAULT 0;
+    ->
+    ->  IF (salary <= 0) THEN
+    ->  SELECT 'Invalid Salary' AS Message;
+    ->
+    ->  ELSEIF (salary >= 100000) THEN
+    ->  SET category = 'High';
+    ->  SET allowance_percentage = 20;
+    ->  SET allowance_amount = salary * (allowance_percentage /100);
+    ->
+    ->  ELSEIF (salary >= 50000) THEN
+    ->  SET category = 'Medium';
+    ->  SET allowance_percentage = 15;
+    ->  SET allowance_amount = salary * (allowance_percentage /100);
+    ->
+    ->  ELSEIF (salary <= 50000) THEN
+    ->  SET category = 'Low';
+    ->  SET allowance_percentage = 10;
+    ->  SET allowance_amount = salary * (allowance_percentage /100);
+    ->
+    ->  ELSE
+    ->  SELECT 'Invalid Salary' AS Message;
+    ->
+    ->  END IF;
+    ->
+    ->  IF salary IS NOT NULL THEN
+    ->  SET final_salary = salary + allowance_amount;
+    ->
+    ->  SELECT
+    ->          emp_name AS Employee_Name,
+    ->          salary AS Salary,
+    ->          category AS Category,
+    ->          CONCAT(allowance_percentage,'%') AS Allowance_Percentage,
+    ->          allowance_amount AS Allowance_Amount,
+    ->          final_salary AS Final_Salary;
+    ->  END IF;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> CALL salary_analysis('Amit', 120000);
++---------------+-----------+----------+----------------------+------------------+--------------+
+| Employee_Name | Salary    | Category | Allowance_Percentage | Allowance_Amount | Final_Salary |
++---------------+-----------+----------+----------------------+------------------+--------------+
+| Amit          | 120000.00 | High     | 20%                  |         24000.00 |    144000.00 |
++---------------+-----------+----------+----------------------+------------------+--------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL salary_analysis('Priya', 60000);
++---------------+----------+----------+----------------------+------------------+--------------+
+| Employee_Name | Salary   | Category | Allowance_Percentage | Allowance_Amount | Final_Salary |
++---------------+----------+----------+----------------------+------------------+--------------+
+| Priya         | 60000.00 | Medium   | 15%                  |          9000.00 |     69000.00 |
++---------------+----------+----------+----------------------+------------------+--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL salary_analysis('Rahul', 35000);
++---------------+----------+----------+----------------------+------------------+--------------+
+| Employee_Name | Salary   | Category | Allowance_Percentage | Allowance_Amount | Final_Salary |
++---------------+----------+----------+----------------------+------------------+--------------+
+| Rahul         | 35000.00 | Low      | 10%                  |          3500.00 |     38500.00 |
++---------------+----------+----------+----------------------+------------------+--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Q7. Electricity Bill Calculation
+
+DELIMITER //
+CREATE PROCEDURE calculate_electricity_bill(
+		 IN consumer_name VARCHAR(20),
+		 IN units INT)
+BEGIN
+	DECLARE total_bill_amount DECIMAL(10,2) DEFAULT 0;
+
+	IF units IS NULL OR (units < 0) THEN
+	SELECT 'Invalid Units' AS Message;	
+
+	ELSEIF (units <= 100) THEN
+	SET total_bill_amount = units * 2;
+	
+	ELSEIF (units <= 200) THEN
+	SET total_bill_amount = (100 * 2)
+			      + ((units - 100) * 3);
+
+	ELSEIF (units <= 400) THEN
+	SET total_bill_amount = (100 * 2) 
+			      + (100 * 3) 
+			      + ((units - 200) * 5);
+
+	ELSE
+        SET total_bill_amount = (100 * 2) 
+			      + (100 * 3) 
+			      + (200 * 5)
+			      + ((units - 400) * 7);
+
+	END IF;
+
+	IF units IS NOT NULL AND units >= 0 THEN
+	SELECT
+		consumer_name AS Consumer_Name, 
+		units AS Units_Consumed, 
+		total_bill_amount AS Total_Bill_Amount;
+	END IF;
+END //
+DELIMITER ;
+------------------------------------------------------------------------
+output->
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE calculate_electricity_bill(
+    ->           IN consumer_name VARCHAR(20),
+    ->           IN units INT)
+    -> BEGIN
+    ->  DECLARE total_bill_amount DECIMAL(10,2) DEFAULT 0;
+    ->
+    ->  IF units IS NULL OR (units < 0) THEN
+    ->  SELECT 'Invalid Units' AS Message;
+    ->
+    ->  ELSEIF (units <= 100) THEN
+    ->  SET total_bill_amount = units * 2;
+    ->
+    ->  ELSEIF (units <= 200) THEN
+    ->  SET total_bill_amount = (100 * 2)
+    ->                        + ((units - 100) * 3);
+    ->
+    ->  ELSEIF (units <= 400) THEN
+    ->  SET total_bill_amount = (100 * 2)
+    ->                        + (100 * 3)
+    ->                        + ((units - 200) * 5);
+    ->
+    ->  ELSE
+    ->         SET total_bill_amount = (100 * 2)
+    ->                        + (100 * 3)
+    ->                        + (200 * 5)
+    ->                        + ((units - 400) * 7);
+    ->
+    ->  END IF;
+    ->
+    ->  IF units IS NOT NULL AND units >= 0 THEN
+    ->  SELECT
+    ->          consumer_name AS Consumer_Name,
+    ->          units AS Units_Consumed,
+    ->          total_bill_amount AS Total_Bill_Amount;
+    ->  END IF;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql> CALL calculate_electricity_bill('Amit', 80);
++---------------+----------------+-------------------+
+| Consumer_Name | Units_Consumed | Total_Bill_Amount |
++---------------+----------------+-------------------+
+| Amit          |             80 |            160.00 |
++---------------+----------------+-------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL calculate_electricity_bill('Priya', 150);
++---------------+----------------+-------------------+
+| Consumer_Name | Units_Consumed | Total_Bill_Amount |
++---------------+----------------+-------------------+
+| Priya         |            150 |            350.00 |
++---------------+----------------+-------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CALL calculate_electricity_bill('Rahul', 350);
++---------------+----------------+-------------------+
+| Consumer_Name | Units_Consumed | Total_Bill_Amount |
++---------------+----------------+-------------------+
+| Rahul         |            350 |           1250.00 |
++---------------+----------------+-------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CALL calculate_electricity_bill('Sneha', 500);
++---------------+----------------+-------------------+
+| Consumer_Name | Units_Consumed | Total_Bill_Amount |
++---------------+----------------+-------------------+
+| Sneha         |            500 |           2200.00 |
++---------------+----------------+-------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

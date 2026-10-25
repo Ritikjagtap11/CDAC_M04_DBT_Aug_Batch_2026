@@ -1,0 +1,272 @@
+#cursors
+
+DELIMITER //
+CREATE PROCEDURE apply_salary_increment()
+BEGIN 
+	DECLARE done BOOLEAN DEFAULT false;
+	DECLARE v_emp_id INT;
+	DECLARE v_emp_name VARCHAR(30);
+	DECLARE v_salary DECIMAL(10,2);
+	DECLARE v_grade CHAR(1);
+
+	DECLARE cur_employee CURSOR FOR
+	SELECT 	emp_id,emp_name,salary,grade
+	FROM employee;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND
+	SET DONE = true;
+
+	OPEN cur_employee;
+
+	salary_loop : loop
+	
+	FETCH cur_employee
+	into v_emp_id,v_emp_name,v_salary,v_grade;
+	
+	
+	IF done THEN
+	 LEAVE salary_loop;
+	END IF;	
+	
+	IF v_grade = 'A' THEN
+	UPDATE employee
+	SET salary = salary * 1.05
+	WHERE emp_id = v_emp_id;
+	
+	ELSEIF v_grade = 'B' THEN
+	UPDATE employee
+	SET salary = salary * 1.10
+	WHERE emp_id = v_emp_id;
+
+	ELSEIF v_grade = 'C' THEN
+	UPDATE employee
+	SET salary = salary * 1.15
+	WHERE emp_id = v_emp_id;
+
+	ELSE 
+	UPDATE employee
+	SET salary = salary * 1.13
+	WHERE emp_id = v_emp_id;
+	END IF;
+	
+	END loop salary_loop;
+	CLOSE cur_employee;
+
+END //
+DELIMITER ;
+
+--------------------------------------------------
+output->
+mysql> DELIMITER ;
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE apply_salary_increment()
+    -> BEGIN
+    ->  DECLARE done BOOLEAN DEFAULT false;
+    ->  DECLARE v_emp_id INT;
+    ->  DECLARE v_emp_name VARCHAR(30);
+    ->  DECLARE v_salary DECIMAL(10,2);
+    ->  DECLARE v_grade CHAR(1);
+    ->
+    ->  DECLARE cur_employee CURSOR FOR
+    ->  SELECT  emp_id,emp_name,salary,grade
+    ->  FROM employee;
+    ->
+    ->  DECLARE CONTINUE HANDLER FOR NOT FOUND
+    ->  SET DONE = true;
+    ->
+    ->  OPEN cur_employee;
+    ->
+    ->  salary_loop : loop
+    ->
+    ->  FETCH cur_employee
+    ->  into v_emp_id,v_emp_name,v_salary,v_grade;
+    ->
+    ->
+    ->  IF done THEN
+    ->   LEAVE salary_loop;
+    ->  END IF;
+    ->
+    ->  IF v_grade = 'A' THEN
+    ->  UPDATE employee
+    ->  SET salary = salary * 1.05
+    ->  WHERE emp_id = v_emp_id;
+    ->
+    ->  ELSEIF v_grade = 'B' THEN
+    ->  UPDATE employee
+    ->  SET salary = salary * 1.10
+    ->  WHERE emp_id = v_emp_id;
+    ->
+    ->  ELSEIF v_grade = 'C' THEN
+    ->  UPDATE employee
+    ->  SET salary = salary * 1.15
+    ->  WHERE emp_id = v_emp_id;
+    ->
+    ->  ELSE
+    ->  UPDATE employee
+    ->  SET salary = salary * 1.13
+    ->  WHERE emp_id = v_emp_id;
+    ->  END IF;
+    ->
+    ->  END loop salary_loop;
+    ->  CLOSE cur_employee;
+    ->
+    -> END //
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> DELIMITER ;
+mysql> select * from employee;
++--------+----------+----------+-------+
+| emp_id | emp_name | salary   | grade |
++--------+----------+----------+-------+
+|    101 | Rahul    | 70000.00 | A     |
+|    102 | Priya    | 35000.00 | C     |
+|    103 | Amit     | 32000.00 | C     |
+|    104 | Sneha    | 40000.00 | B     |
+|    105 | Vikas    | 45000.00 | B     |
++--------+----------+----------+-------+
+5 rows in set (0.00 sec)
+
+mysql> call apply_salary_increment();
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> select * from employee;
++--------+----------+----------+-------+
+| emp_id | emp_name | salary   | grade |
++--------+----------+----------+-------+
+|    101 | Rahul    | 73500.00 | A     |
+|    102 | Priya    | 40250.00 | C     |
+|    103 | Amit     | 36800.00 | C     |
+|    104 | Sneha    | 44000.00 | B     |
+|    105 | Vikas    | 49500.00 | B     |
++--------+----------+----------+-------+
+5 rows in set (0.00 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+-----CREATE TABLE--------
+CREATE TABLE employee_archieve(
+	emp_id INT,
+	emp_name VARCHAR(30),
+	salary INT,
+	grade VARCHAR(2),
+	acrchieve_on DATETIME
+);
+
+DELIMITER //
+CREATE PROCEDURE archieve_low_salary()
+BEGIN
+	DECLARE done BOOLEAN DEFAULT false;
+
+	DECLARE v_emp_id INT;
+	DECLARE v_emp_name VARCHAR(30);
+	DECLARE v_salary INT;
+	DECLARE v_grade CHAR(1);
+
+	DECLARE cur_employee CURSOR FOR
+	SELECT emp_id, emp_name, salary, grade
+	FROM employee;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND
+	SET done = true;
+
+	OPEN cur_employee;
+	
+	archieve_loop: LOOP
+	
+	FETCH cur_employee
+	INTO v_emp_id, v_emp_name, v_salary, v_grade;
+		
+	IF done THEN
+	  LEAVE archieve_loop;
+	END IF;
+
+	IF v_salary <= 50000 THEN
+	INSERT INTO employee_archieve
+	(emp_id,emp_name,salary,grade,acrchieve_on)
+	VALUES
+	(v_emp_id,v_emp_name,v_salary,v_grade,now());
+	END IF;
+	
+	END LOOP;
+	
+	CLOSE cur_employee;
+END //
+DELIMITER ;
+
+-----------------------------------------------
+output->
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE archieve_low_salary()
+    -> BEGIN
+    ->  DECLARE done BOOLEAN DEFAULT false;
+    ->
+    ->  DECLARE v_emp_id INT;
+    ->  DECLARE v_emp_name VARCHAR(30);
+    ->  DECLARE v_salary INT;
+    ->  DECLARE v_grade CHAR(1);
+    ->
+    ->  DECLARE cur_employee CURSOR FOR
+    ->  SELECT emp_id, emp_name, salary, grade
+    ->  FROM employee;
+    ->
+    ->  DECLARE CONTINUE HANDLER FOR NOT FOUND
+    ->  SET done = true;
+    ->
+    ->  OPEN cur_employee;
+    ->
+    ->  archieve_loop: LOOP
+    ->
+    ->  FETCH cur_employee
+    ->  INTO v_emp_id, v_emp_name, v_salary, v_grade;
+    ->
+    ->  IF done THEN
+    ->    LEAVE archieve_loop;
+    ->  END IF;
+    ->
+    ->  IF v_salary <= 50000 THEN
+    ->  INSERT INTO employee_archieve
+    ->  (emp_id,emp_name,salary,grade,acrchieve_on)
+    ->  VALUES
+    ->  (v_emp_id,v_emp_name,v_salary,v_grade,now());
+    ->  END IF;
+    ->
+    ->  END LOOP;
+    ->
+    ->  CLOSE cur_employee;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql> select * from employee_archieve();
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '()' at line 1
+mysql> select * from employee_archieve;
++--------+----------+--------+-------+---------------------+
+| emp_id | emp_name | salary | grade | acrchieve_on        |
++--------+----------+--------+-------+---------------------+
+|    102 | Priya    |  40250 | C     | 2026-10-17 14:06:20 |
+|    103 | Amit     |  36800 | C     | 2026-10-17 14:06:20 |
+|    104 | Sneha    |  44000 | B     | 2026-10-17 14:06:20 |
+|    105 | Vikas    |  49500 | B     | 2026-10-17 14:06:20 |
++--------+----------+--------+-------+---------------------+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+...custome exceptions handlers
+
+DELIMITER //
+CREATE PROCEDURE add_students(
+		 s_id INT,
+		 s_name VARCHAR(20),
+		 d_id INT,
+		 s_marks DECIMAL(10,2))
+BEGIN
+	DECLARE CONTINUE HANDLER FOR 1062
+	SELECT 'student id is already present' AS message;
+
+	INSERT INTO student
+	(student_id,name,dept_id,marks)
+	VALUES
+	(s_id,s_name,d_id,s_marks);
+
+END //
+DELIMITER ;	

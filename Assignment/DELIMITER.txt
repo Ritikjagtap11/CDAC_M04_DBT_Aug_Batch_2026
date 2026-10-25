@@ -1,0 +1,116 @@
+DELIMITER //
+CREATE PROCEDURE check_grade(IN p_salary INT)
+BEGIN
+	CASE
+		WHEN p_salary >= 50000 THEN
+			SELECT 'Grade A' AS Result;
+		WHEN p_salary >= 30000 THEN
+			SELECT 'Grade B' AS Result;
+		ELSE 
+			SELECT 'Grade C' AS Result;
+	END CASE;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE prints_while(n INT)
+BEGIN
+	DECLARE iTmp INT DEFAULT 1;
+
+	WHILE iTmp <= n DO
+		SELECT iTmp AS Number;
+		SET iTmp = iTmp + 1;
+	END WHILE;
+END //
+DELIMITER ;
+
+DELIMITER  //
+CREATE PROCEDURE prints_repeat(n INT)
+BEGIN
+	DECLARE iTmp INT DEFAULT 1;
+	
+	REPEAT
+	  SELECT iTmp AS Number;
+	  SET iTmp = iTmp + 1;
+	UNTIL iTmp > n
+	END REPEAT;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE prints_loop(n INT)
+BEGIN
+	DECLARE iTmp INT DEFAULT 1;
+
+	number_loop: LOOP
+		SELECT iTmp AS Number;
+		SET iTmp = iTmp + 1;
+
+		IF iTmp > n THEN
+			LEAVE number_loop;
+		END IF;
+	END LOOP number_loop;
+END //
+DELIMITER ;
+
+
+
+CREATE TABLE employee_log(message VARCHAR(100));
+
+BEFOR INSERT
+
+DELIMITER //
+
+CREATE TRIGGER befor_employee_insert
+BEFORE INSERT ON employee
+FOR EACH ROW
+BEGIN 
+	IF NEW.salary < 0 THEN
+	SIGNAL SQLSTATE '45000'
+	SET MASSAGE_TEXT = 'salary not negative';
+	END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER after_employee_insert
+AFTER INSERT ON employee
+FOR EACH ROW
+BEGIN 
+	INSERT INTO employee_log
+	VALUES
+	(CONCAT('New employee added: ', NEW.emp_name));
+END //
+DELIMITER ;
+
+CREATE TRIGGER befor_employee_update
+BEFORE UPDATE ON employee
+FOR EACH ROW
+BEGIN 
+	IF NEW.salary < 0 THEN
+	SIGNAL SQLSTATE '45000'
+	SET MASSAGE_TEXT = 'salary not negative';
+	END IF;
+END //
+DELIMITER ;
+
+
+CREATE TRIGGER after_employee_update
+AFTER UPDATE ON employee
+FOR EACH ROW
+BEGIN 
+	INSERT INTO employee_log
+	VALUES (
+	    CONCAT(
+		NEW.emp_name,
+		' :Salary changed from ',
+		OLD.salary,
+		' to ',
+		NEW.salary
+	    )
+	);
+END //
+DELIMITER ;
+
+

@@ -1,0 +1,64 @@
+Task 1: Database Creation and Table Setup
+
+Q1->
+CREATE DATABASE RailwayManagementDB;
+
+Q2->
+
+CREATE TABLE Trains (
+    TrainID INT PRIMARY KEY,
+    TrainName VARCHAR(100) NOT NULL,
+    TrainType VARCHAR(50),
+    TotalSeats INT NOT NULL
+);
+
+CREATE TABLE Routes (
+    RouteID INT PRIMARY KEY,
+    StartStation VARCHAR(100) NOT NULL,
+    EndStation VARCHAR(100) NOT NULL,
+    Distance DECIMAL(8,2)
+);
+
+CREATE TABLE Passengers (
+    PassengerID INT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Age INT,
+    Email VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE Schedules (
+    ScheduleID INT PRIMARY KEY,
+    TrainID INT NOT NULL,
+    RouteID INT NOT NULL,
+    DepartureTime DATETIME,
+    ArrivalTime DATETIME,
+    FOREIGN KEY (TrainID) REFERENCES Trains(TrainID),
+    FOREIGN KEY (RouteID) REFERENCES Routes(RouteID)
+);
+
+CREATE TABLE Bookings (
+    BookingID INT PRIMARY KEY,
+    PassengerID INT NOT NULL,
+    ScheduleID INT NOT NULL,
+    BookingDate DATE,
+    SeatNumber INT,
+    FOREIGN KEY (PassengerID) REFERENCES Passengers(PassengerID),
+    FOREIGN KEY (ScheduleID) REFERENCES Schedules(ScheduleID)
+);
+
+SELECT  t.TrainName, r.*, s.*
+FROM Trains t
+INNER JOIN Schedules s
+ON t.TrainID = s.TrainID
+INNER JOIN routes r
+ON r.RouteID = s.RouteID;
+
+
+SELECT  t.*
+FROM Trains t
+LEFT JOIN Schedules s
+ON t.TrainID = s.TrainID
+LEFT JOIN routes r
+ON r.RouteID = s.RouteID
+WHERE b.BookingID IS NULL;

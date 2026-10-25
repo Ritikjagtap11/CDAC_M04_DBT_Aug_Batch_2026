@@ -1,0 +1,439 @@
+
+
+1. function without parameter;
+
+DELIMITER //
+CREATE FUNCTION get_company_name()
+RETURNS VARCHAR(30)
+DETERMINISTIC
+NO SQL
+BEGIN
+  RETURN 'C-DAC Mumbai';
+END //
+DELIMITER ;
+
+SELECT get_company_name();
+-------------------------------------
+output->
+mysql> DELIMITER //
+mysql> CREATE FUNCTION get_company_name()
+    -> RETURNS VARCHAR(30)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->   RETURN 'C-DAC Mumbai';
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql>
+mysql> SELECT get_company_name();
++--------------------+
+| get_company_name() |
++--------------------+
+| C-DAC Mumbai       |
++--------------------+
+1 row in set (0.01 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+2. function with one parameter;
+
+DELIMITER //
+
+CREATE FUNCTION square_number( N int)
+RETURNS INT
+
+DETERMINISTIC
+NO SQL
+
+BEGIN
+
+RETURN N*N;
+
+END //
+
+DELIMITER ;
+
+SELECT square_number(5);
+----------------------------------------
+output->
+mysql> DELIMITER //
+mysql>
+mysql> CREATE FUNCTION square_number( N int)
+    -> RETURNS INT
+    ->
+    -> DETERMINISTIC
+    -> NO SQL
+    ->
+    -> BEGIN
+    ->
+    -> RETURN N*N;
+    ->
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> SELECT square_number(5);
++------------------+
+| square_number(5) |
++------------------+
+|               25 |
++------------------+
+1 row in set (0.00 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+3. function with multiple parameter
+
+DELIMITER //
+CREATE FUNCTION total_amount(
+	price DECIMAL(10,2),
+	quantity INT)
+RETURNS DECIMAL(12,2)
+DETERMINISTIC
+NO SQL
+BEGIN
+	RETURN price * quantity;
+END //
+DELIMITER ;
+
+SELECT total_amount(10,5);
+----------------------------------------------
+output->
+mysql> DELIMITER //
+mysql> CREATE FUNCTION total_amount(
+    ->  price DECIMAL(10,2),
+    ->  quantity INT)
+    -> RETURNS DECIMAL(12,2)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->  RETURN price * quantity;
+    -> END //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DELIMITER ;
+mysql> SELECT total_amount(10,5);
++--------------------+
+| total_amount(10,5) |
++--------------------+
+|              50.00 |
++--------------------+
+1 row in set (0.01 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+# function using calculate_grade
+
+DELIMITER //
+CREATE FUNCTION calculate_grade(s_marks INT)
+RETURNS VARCHAR(10)
+DETERMINISTIC
+NO SQL
+BEGIN
+	IF s_marks >= 90 THEN
+	RETURN 'A+';
+	
+	ELSEIF s_marks >= 80 THEN
+	RETURN 'A';
+
+	ELSEIF s_marks >= 70 THEN
+	RETURN 'B';
+	
+	ELSEIF s_marks >= 60 THEN
+	RETURN 'C';
+	
+	ELSEIF s_marks >= 50 THEN
+	RETURN 'D';
+	
+	ELSE
+	RETURN 'F';
+	
+	END IF;
+END //
+DELIMITER ;
+
+SELECT calculate_grade(80);
+
+#using table 
+SELECT 
+	student_id,
+	name,
+	marks,
+	calculate_grade(marks) As grade
+FROM student;
+
+#using where
+SELECT 
+	student_id,
+	name,
+	marks,
+	calculate_grade(marks)
+FROM student
+WHERE calculate_grade(marks) = 'A';
+
+------------------------------------------------
+output->
+mysql> DELIMITER //
+mysql> CREATE FUNCTION calculate_grade(s_marks INT)
+    -> RETURNS VARCHAR(10)
+    -> DETERMINISTIC
+    -> NO SQL
+    -> BEGIN
+    ->  IF s_marks >= 90 THEN
+    ->  RETURN 'A+';
+    ->
+    ->  ELSEIF s_marks >= 80 THEN
+    ->  RETURN 'A';
+    ->
+    ->  ELSEIF s_marks >= 70 THEN
+    ->  RETURN 'B';
+    ->
+    ->  ELSEIF s_marks >= 60 THEN
+    ->  RETURN 'C';
+    ->
+    ->  ELSEIF s_marks >= 50 THEN
+    ->  RETURN 'D';
+    ->
+    ->  ELSE
+    ->  RETURN 'F';
+    ->
+    ->  END IF;
+    -> END //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DELIMITER ;
+mysql> select calculate_grade(80);
++---------------------+
+| calculate_grade(80) |
++---------------------+
+| A                   |
++---------------------+
+1 row in set (0.01 sec)
+
+mysql> select * from student;
++------------+--------------+---------+-------+
+| student_id | name         | dept_id | marks |
++------------+--------------+---------+-------+
+|        101 | Sachin patil |      10 | 85.50 |
+|        102 | Neha patil   |      20 | 92.00 |
+|        103 | Rahul khot   |      10 | 76.50 |
+|        104 | Priya bapat  |      30 | 88.00 |
++------------+--------------+---------+-------+
+4 rows in set (0.03 sec)
+
+mysql> select student_id, name, calculate_grade(marks) AS grade from student;
++------------+--------------+-------+
+| student_id | name         | grade |
++------------+--------------+-------+
+|        101 | Sachin patil | A     |
+|        102 | Neha patil   | A+    |
+|        103 | Rahul khot   | B     |
+|        104 | Priya bapat  | A     |
++------------+--------------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->  student_id,
+    ->  name,
+    ->  marks,
+    ->  calculate_grade(marks)
+    -> FROM student
+    -> WHERE calculate_grade(marks) = 'A';
++------------+--------------+-------+------------------------+
+| student_id | name         | marks | calculate_grade(marks) |
++------------+--------------+-------+------------------------+
+|        101 | Sachin patil | 85.50 | A                      |
+|        104 | Priya bapat  | 88.00 | A                      |
++------------+--------------+-------+------------------------+
+2 rows in set (0.00 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#calculate annual salary
+ Monthly_salary = (monthly_salary + (monthly_salary * 0.30)) * 12;
+
+DELIMITER //
+CREATE FUNCTION annual_salary(monthly_salary DECIMAL (10,2))
+RETURNS DECIMAL(12,2)
+BEGIN
+	RETURN (monthly_salary + (monthly_salary * 0.30)) * 12;
+END //
+
+DELIMITER ;
+
+--------------------------------------------------------------
+output->
+mysql> DELIMITER //
+mysql> CREATE FUNCTION annual_salary(monthly_salary DECIMAL (10,2))
+    -> RETURNS DECIMAL(12,2)
+    -> BEGIN
+    ->  RETURN (monthly_salary + (monthly_salary * 0.30)) * 12;
+    -> END //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> SELECT annual_salary(60000);
++----------------------+
+| annual_salary(60000) |
++----------------------+
+|            936000.00 |
++----------------------+
+1 row in set (0.00 sec)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+# calculate  Discount 
+DELIMITER //
+CREATE FUNCTION calculate_discount(
+		amount DECIMAL(10,2))
+RETURNS DECIMAL(12,2)
+DETERMINISTIC
+BEGIN 
+	IF amount >= 20000 THEN
+	RETURN amount * 0.10;
+	
+	ELSEIF amount >= 10000 THEN
+	RETURN amount * 0.20;
+
+	ELSE
+	RETURN amount * 0.03;
+	END IF;
+END //
+DELIMITER ;
+
+SELECT calculate_discount(20000);
+----------------------------------------
+output->
+mysql> CREATE FUNCTION calculate_discount(
+    ->          amount DECIMAL(10,2))
+    -> RETURNS DECIMAL(12,2)
+    -> DETERMINISTIC
+    -> BEGIN
+    ->  IF amount >= 20000 THEN
+    ->  RETURN amount * 0.10;
+    ->
+    ->  ELSEIF amount >= 10000 THEN
+    ->  RETURN amount * 0.20;
+    ->
+    ->  ELSE
+    ->  RETURN amount * 0.03;
+    ->  END IF;
+    -> END //
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> DELIMITER;
+    -> DELIMITER ;
+    -> ^C
+mysql> DELIMITER ;
+mysql> SELECT calculate_discount(20000);
++---------------------------+
+| calculate_discount(20000) |
++---------------------------+
+|                   2000.00 |
++---------------------------+
+1 row in set (0.01 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_oct14 |
++-----------------+
+| department      |
+| student         |
+| student_demo    |
++-----------------+
+3 rows in set (0.06 sec)
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#Trigger
+
+
+CREATE TABLE audit_table(
+	audit_id INT PRIMARY KEY AUTO_INCREMENT,
+	emp_id INT,
+	emp_name VARCHAR(30),
+	old_salary DECIMAL(10,2),
+	new_salary DECIMAL(10,2),
+	change_on datetime
+);
+
+
+->after update
+
+DELIMITER //
+CREATE TRIGGER trgt_salary_audit
+AFTER UPDATE ON employee
+FOR EACH ROW
+BEGIN
+	INSERT INTO audit_table
+	(emp_id,emp_name,old_salary,new_salary,change_on)
+	VALUES
+	(NEW.emp_id,NEW.emp_name,OLD.salary,NEW.salary,now());
+END //
+DELIMITER ;
+----------------------------------------------------------------
+output->
+mysql> select * from employee;
++--------+----------+----------+
+| emp_id | emp_name | salary   |
++--------+----------+----------+
+|    101 | Rahul    | 30000.00 |
+|    102 | Priya    | 35000.00 |
+|    103 | Amit     | 32000.00 |
+|    104 | Sneha    | 40000.00 |
+|    105 | Vikas    | 45000.00 |
++--------+----------+----------+
+5 rows in set (0.00 sec)
+
+mysql> update employee set salary ='70000' where emp_id=101;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee;
++--------+----------+----------+
+| emp_id | emp_name | salary   |
++--------+----------+----------+
+|    101 | Rahul    | 70000.00 |
+|    102 | Priya    | 35000.00 |
+|    103 | Amit     | 32000.00 |
+|    104 | Sneha    | 40000.00 |
+|    105 | Vikas    | 45000.00 |
++--------+----------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from audit_table;
++----------+--------+----------+------------+------------+---------------------+
+| audit_id | emp_id | emp_name | old_salary | new_salary | change_on           |
++----------+--------+----------+------------+------------+---------------------+
+|        1 |    101 | Rahul    |   30000.00 |   70000.00 | 2026-10-17 11:21:06 |
++----------+--------+----------+------------+------------+---------------------+
+1 row in set (0.00 sec)
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+->before insert
+DELIMITER // 
+CREATE TRIGGER trg_check_salary 
+BEFORE INSERT ON employee 
+FOR EACH ROW 
+BEGIN 
+	IF NEW.salary < 0 THEN 
+	SIGNAL SQLSTATE '45000' 
+	SET MESSAGE_TEXT = 'Salary cannot be negative'; 
+	END IF; 
+END // 
+DELIMITER ; 
+---------------------------------------------------------------
+#stock
+
+create table product ( product_id int primary key, product_name varchar(30), quantity int ); 
+
+
+SETUP->
+
+SHOW VARIABLES LIKE 'log_bin_trust_function_creators';
+SET GLOBAL log_bin_trust_function_creators = 1;

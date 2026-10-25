@@ -1,0 +1,63 @@
+Cross join
+
+SELECT e.emp_name,e.emp_salary,d.dep_name
+FROM employee e
+CROSS JOIN department d;
+
+INNER JOIN
+
+SELECT e.dep_id,e.emp_name,d.dep_id,d.dep_name
+FROM employee e
+INNER JOIN department d
+ON e.dep_id = d.dep_id;
+
+EQVI JOIN
+
+SELECT e.emp_name,d.dep_name
+FROM employee e
+JOIN department d
+ON e.dep_id = d.dep_id;
+
+NON-EQVI JOIN
+SELECT e.emp_id,e.emp_name,e.emp_salary,d.dep_id
+FROM employee e
+JOIN department d
+ON e.dep_id > d.dep_id;
+
+left join
+
+SELECT e.emp_id, e.emp_name, d.dep_name
+FROM employee e
+LEFT JOIN department d
+ON e.dep_id = d.dep_id;
+
+Right join
+
+SELECT e.emp_id, e.emp_name, d.dep_name
+FROM employee e
+RIGHT JOIN department d
+ON e.dep_id = d.dep_id;
+
+
+outer full joins
+SELECT e.emp_id, e.emp_name, d.dep_name
+FROM employee e
+LEFT JOIN department d
+ON e.dep_id = d.dep_id
+UNION
+SELECT e.emp_id, e.emp_name, d.dep_name
+FROM employee e
+RIGHT JOIN department d
+ON e.dep_id = d.dep_id;
+
+natural join
+SELECT e.emp_id, e.emp_name, d.dep_name
+FROM employee e
+NATURAL JOIN department d;
+
+
+self join
+SELECT e.emp_id,e.emp_name AS employee, m.mentor_id As mentor
+FROM employee e
+SELF JOIN employee m
+ON e.emp_id = m.mentor_id;
